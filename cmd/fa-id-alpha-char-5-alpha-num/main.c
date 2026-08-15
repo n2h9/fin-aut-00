@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include "fa.h"
+#include "../../fa.h"
 
 state_t transition_func(state_t s, char c);
 
