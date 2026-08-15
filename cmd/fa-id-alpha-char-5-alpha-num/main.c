@@ -1,29 +1,37 @@
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include "../../fa.h"
 
-state_t transition_func(state_t s, char c);
 
-const state_t s_start = 0;
-const state_t s1      = 1;  // 1st char 
-const state_t s2      = 2;  // 2nd char
-const state_t s3      = 3;  // 3rd char
-const state_t s4      = 4;  // 4th char
-const state_t s5      = 5;  // 5th char
-const state_t s_error = 10;
+// start and error states defined inn fa.h
+const state_t s_error     = 0;
+const state_t s_start     = 1;
+const state_t s1          = 2;  // 1st cha
+const state_t s2          = 3;  // 2nd char
+const state_t s3          = 4;  // 3rd char
+const state_t s4          = 5;  // 4th char
+const state_t s5          = 6;  // 5th char
+const state_t s_sentinel  = 7;
 
 struct FA fa = {
   .start_state = s_start,
-  .transition_func = transition_func,
+  .transition_table_size = s_sentinel,
+  .transition_table = NULL, // is populated by calling prepare_transition_table bellow
   .accepting_states_len = 4,
   .accepting_states = {s2, s3, s4, s5},
 };
 
+void prepare_transition_table();
+void delete_transition_table();
+
 int main() {
   pid_t pid = getpid();
   printf("pid %d\n", pid);
+
+  prepare_transition_table();
 
   char str[1024];
 
@@ -36,30 +44,53 @@ int main() {
     printf("this is not an identifier\n");
   }
 
+  delete_transition_table();
+
   return 0;
 }
 
-state_t transition_func(state_t s, char c) {
-  state_t next = s_error;
-  if (s == s_start) {
-    if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {
-      next = s1;
-    } else {
-      next = s_error;
+// populates transition table of fa defined above
+void prepare_transition_table() {
+  transition_table_t tt = (transition_table_t) malloc(fa.transition_table_size * sizeof(state_t *));
+  for (size_t i = 0; i < fa.transition_table_size; i++) {
+    tt[i] = (state_t *) malloc(INPUT_ALPHABET_SIZE * sizeof(state_t));
+    for (size_t j = 0; j < INPUT_ALPHABET_SIZE; j++) {
+      tt[i][j] = s_error;
     }
-  } else if (s >= s1 && s <= s4) {
-    if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') {
-      next = s + 1;
-    } else {
-      next = s_error;
-    }
-  } else if (s == s5) {
-    next = s_error;
-  } else if (s == s_error) {
-    next = s_error;
-  } else {
-    next = s_error;
   }
-  return next;
+
+  for (symbol_t s = 'a'; s <= 'z'; s++) {
+    tt[s_start][s] = s1;
+  }
+
+  for (symbol_t s = 'A'; s <= 'Z'; s++) {
+    tt[s_start][s] = s1;
+  }
+
+  for (state_t  st = s1; st <= s4; st++) {
+    state_t next = st + 1;
+    for (symbol_t s = 'a'; s <= 'z'; s++) {
+      tt[st][s] =next;
+    }
+
+    for (symbol_t s = 'A'; s <= 'Z'; s++) {
+      tt[st][s] = next;
+    }
+
+    for (symbol_t s = '0'; s <= '9'; s++) {
+      tt[st][s] = next;
+    }
+  }
+
+  fa.transition_table = tt;
 }
 
+void delete_transition_table() {
+  transition_table_t tt = fa.transition_table;
+  for (size_t i = 0; i < fa.transition_table_size; i++) {
+    free(tt[i]);
+  }
+
+  free(tt);
+  fa.transition_table = NULL;
+}

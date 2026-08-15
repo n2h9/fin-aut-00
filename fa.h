@@ -1,25 +1,40 @@
 #ifndef _FA_H
 #define _FA_H
 
+#include <stddef.h>
 #include <unistd.h>
 
-typedef int state_t;
+struct FA;
+
+typedef struct FA fa_t;
+
+typedef unsigned int state_t;
+typedef char symbol_t;
+// transition _table_t represents the transition table as two dimensional array
+// where [state_from][s] -> state_to, represents a transition  from state_from  on symbol "s" to state_to
+// transition table type relies on both state_t and symbol_t are of size_t subtype
+typedef state_t** transition_table_t;
+
+#define INPUT_ALPHABET_SIZE 256
 
 struct FA {
   state_t start_state;
-  state_t (* transition_func)(state_t, char);
+  size_t transition_table_size;
+  transition_table_t transition_table;
   size_t accepting_states_len;
   state_t accepting_states[];
 };
 
+state_t transition_func(fa_t *fa, state_t from, symbol_t s);
 
 /**
   * satisfies_fa
   * @param *fa
-  * @returns 
+  * @returns
   *   1 if str[0:len) satisfies finite automat fa,
   *   0 otherwise
   */
-char satisfies_fa(struct FA *fa, char *str, int len);
+char satisfies_fa(fa_t *fa, symbol_t *input_seq, size_t len);
+
 
 #endif // ! _FA_H
