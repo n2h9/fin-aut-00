@@ -21,7 +21,10 @@ typedef char symbol_t;
  */
 typedef state_t** transition_table_t;
 
-#define INPUT_ALPHABET_SIZE 256
+/* 256 is a 1 byte + 1  for  epsilon  symbol */
+#define INPUT_ALPHABET_SIZE (256 + 1) 
+/* last index is used as n index for epsilon symbol */
+#define EPSILON_INDEX (INPUT_ALPHABET_SIZE - 1)
 
 struct FA {
   state_t start_state;
