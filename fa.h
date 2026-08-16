@@ -10,9 +10,15 @@ typedef struct FA fa_t;
 
 typedef unsigned int state_t;
 typedef char symbol_t;
-// transition _table_t represents the transition table as two dimensional array
-// where [state_from][s] -> state_to, represents a transition  from state_from  on symbol "s" to state_to
-// transition table type relies on both state_t and symbol_t are of size_t subtype
+
+/*
+ * transition_table_t represents the transition table as a two-dimensional
+ * array. The entry [state_from][s] -> state_to represents a transition
+ * from state_from to state_to on input symbol "s".
+ *
+ * The transition table type relies on both state_t and symbol_t being
+ * compatible with the types used for indexing the table.
+ */
 typedef state_t** transition_table_t;
 
 #define INPUT_ALPHABET_SIZE 256
@@ -28,13 +34,16 @@ struct FA {
 state_t transition_func(fa_t *fa, state_t from, symbol_t s);
 
 /**
-  * satisfies_fa
-  * @param *fa
-  * @returns
-  *   1 if str[0:len) satisfies finite automat fa,
-  *   0 otherwise
-  */
+ * Determines whether the given input sequence is accepted by the finite
+ * automaton.
+ *
+ * @param fa        The finite automaton.
+ * @param input_seq The input sequence to evaluate.
+ * @param len       The length of the input sequence.
+ *
+ * @return 1 if the input sequence is accepted by the finite automaton,
+ *         0 otherwise.
+ */
 char satisfies_fa(fa_t *fa, symbol_t *input_seq, size_t len);
 
-
-#endif // ! _FA_H
+#endif // !_FA_H
