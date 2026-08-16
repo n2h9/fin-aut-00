@@ -19,15 +19,15 @@ struct RE_sequence;
 struct RE_operation;
 
 enum RE_type {
-  SEQ,
-  OPN,
+  RE_SEQ,
+  RE_OPN,
 };
 
 enum RE_operation_kind {
-  NOOP,
-  CONCAT,
-  ALTERN,
-  CLOSUR,
+  RE_NOOP,
+  RE_CONCAT,
+  RE_ALTERN,
+  RE_CLOSUR,
 };
 
 typedef char re_symbol_t;
