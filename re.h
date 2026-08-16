@@ -4,13 +4,15 @@
 #include <unistd.h>
 
 /**
-  * As per Cooper & Torczon
-  * Regular Expression (RE)) supports 3 opeerations:
-  * - concatenation;
-  * - alternation;
-  * - Kleene closure
-  * (more advanced opeartions could be defined from this 3 operations)
-  */
+ * As described by Cooper and Torczon, a regular expression (RE) supports
+ * three basic operations:
+ *
+ * - concatenation;
+ * - alternation;
+ * - Kleene closure.
+ *
+ * More advanced operations can be defined in terms of these three operations.
+ */
 
 struct RE;
 struct RE_sequence;
@@ -38,12 +40,12 @@ typedef struct RE_operation re_opn_t;
 typedef enum RE_operation_kind re_opn_enum;
 
 struct RE_sequence {
-  re_symbol_t *str; 
+  re_symbol_t *str;
 };
 
 struct RE_operation {
   re_t *re01;
-  re_t *reo2; /* not used for unary operations */
+  re_t *reo2; /* Not used for unary operations. */
   re_opn_enum op;
 };
 
@@ -56,8 +58,15 @@ struct RE {
 };
 
 /**
- * parse string into re_t * typpe
-*/
-re_t * re_from(char *str, size_t len, int * err_code);
+ * Parses a string into a regular expression.
+ *
+ * @param str      The input string to parse.
+ * @param len      The length of the input string.
+ * @param err_code A pointer to an integer where the error code is stored.
+ *
+ * @return A pointer to the resulting regular expression, or NULL if parsing
+ *         fails.
+ */
+re_t *re_from(char *str, size_t len, int *err_code);
 
 #endif
