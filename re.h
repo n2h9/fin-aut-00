@@ -59,8 +59,9 @@ struct RE {
   };
 };
 
-#define ERR_UNKNOWN_ESCAPE_SEQ  1
-#define ERR_INCORRECT_OPERAND   2
+#define ERR_UNKNOWN_ESCAPE_SEQ 1
+#define ERR_INCORRECT_OPERAND 2
+#define ERR_UNKNOWN_CONTROL_CHAR 3
 
 /**
  * Parses a string into a regular expression.
