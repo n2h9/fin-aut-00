@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct stack_node;
 struct node_item;
@@ -142,4 +143,15 @@ struct stack_node *stack_push(struct stack_node *stack, struct node_item item) {
   node->elem = item;
   node->next = stack;
   return node;
+}
+
+char *re_to_str(re_t *re, size_t *n) {
+  if (re->kind == RE_SEQ) {
+    *n = re->seq->size;
+    char *str = (char *) malloc(*n * sizeof(char));
+    strncpy(str, re->seq->str, *n);
+    return str;
+  }
+
+  return 0;
 }

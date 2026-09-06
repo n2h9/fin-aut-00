@@ -79,4 +79,11 @@ re_t *re_from_symbol(symbol_t s);
 
 re_t *re_from_re(re_t *re1, re_t *re2, re_opn_enum opn_kind);
 
+/**
+* Converts re to string
+* @param re
+* @oarams n       The length of the output string
+* @return         A pointer to the resulting string
+**/
+char *re_to_str(re_t *re, size_t *n);
 #endif
