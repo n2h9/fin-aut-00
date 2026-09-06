@@ -6,7 +6,9 @@
 #include "../../re.h"
 
 void print_seq();
-void print_reg();
+void print_reg_01_altern();
+void print_reg_02_closure();
+void print_reg_03_nested();
 
 int main(int argc, char **argv) {
   // printf("re from str\n");
@@ -24,7 +26,9 @@ int main(int argc, char **argv) {
   // printf("you entered:\n%s\nlength=%zu\n", str, str_len);
 
   print_seq();
-  print_reg();
+  print_reg_01_altern();
+  print_reg_02_closure();
+  print_reg_03_nested();
 
   return 0;
 }
@@ -50,11 +54,109 @@ void print_seq() {
   free(str_from_re);
 }
 
-void print_reg() { 
+void print_reg_01_altern() { 
   re_opn_t re_opn = {
     .op = RE_ALTERN,
-    .re01 = NULL,
+    .re01 = &(re_t) {
+      .kind = RE_SEQ,
+      .seq = &(re_seq_t) {
+        .str = "xyz",
+        .size = 3,
+      }
+    },
+    .re02 = &(re_t) {
+      .kind = RE_SEQ,
+      .seq = &(re_seq_t) {
+        .str = "ololo",
+        .size = 5,
+      }
+    },
+  };
+
+  re_t re = {
+    .kind = RE_OPN,
+    .opn = &re_opn, 
+  };
+
+  size_t n;
+  char *str_from_re = re_to_str(&re, &n);
+  
+  char *str_from_re_tmp = (char *) malloc(n+1 * sizeof(char));
+  strncpy(str_from_re_tmp, str_from_re, n);
+  str_from_re_tmp[n] = 0;
+
+  printf("str from re (opn):\n%s\n", str_from_re_tmp);
+  free(str_from_re);
+  free(str_from_re_tmp);
+}
+
+void print_reg_02_closure() { 
+  re_opn_t re_opn = {
+    .op = RE_CLOSUR,
+    .re01 = &(re_t) {
+      .kind = RE_SEQ,
+      .seq = &(re_seq_t) {
+        .str = "aab",
+        .size = 3,
+      }
+    },
     .re02 = NULL,
+  };
+
+  re_t re = {
+    .kind = RE_OPN,
+    .opn = &re_opn, 
+  };
+
+  size_t n;
+  char *str_from_re = re_to_str(&re, &n);
+  
+  char *str_from_re_tmp = (char *) malloc(n+1 * sizeof(char));
+  strncpy(str_from_re_tmp, str_from_re, n);
+  str_from_re_tmp[n] = 0;
+
+  printf("str from re (opn):\n%s\n", str_from_re_tmp);
+  free(str_from_re);
+  free(str_from_re_tmp);
+}
+
+void print_reg_03_nested() { 
+  re_opn_t re_opn = {
+    .op = RE_ALTERN,
+    .re01 = &(re_t) {
+      .kind = RE_OPN,
+      .opn = &(re_opn_t) {
+        .op = RE_CONCAT,
+        .re01 = &(re_t) {
+          .kind = RE_SEQ,
+          .seq = &(re_seq_t) {
+            .str = "xyz",
+            .size = 3,
+          },
+        },
+        .re02 = &(re_t) {
+          .kind = RE_SEQ,
+          .seq = &(re_seq_t) {
+            .str = "ab",
+            .size = 2,
+          },
+        },
+      },
+    },
+    .re02 = &(re_t) {
+      .kind = RE_OPN,
+      .opn = &(re_opn_t) {
+        .op = RE_CLOSUR,
+        .re01 = &(re_t) {
+          .kind = RE_SEQ,
+          .seq = &(re_seq_t) {
+            .str = "ololo",
+            .size = 5,
+          }
+        },
+        .re02 = NULL,
+      },
+    }
   };
 
   re_t re = {

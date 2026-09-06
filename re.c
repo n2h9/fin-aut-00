@@ -165,6 +165,11 @@ char* re_opn_enum_to_str(re_opn_enum op) {
 } 
 
 char *re_to_str(re_t *re, size_t *n) {
+  if (re == NULL) {
+    *n = 0;
+    return NULL;
+  }
+
   if (re->kind == RE_SEQ) {
     *n = re->seq->size;
     char *str = (char *) malloc(*n * sizeof(char));
@@ -173,20 +178,39 @@ char *re_to_str(re_t *re, size_t *n) {
   }
 
   if (re->kind == RE_OPN) {
-    // if (re->opn->re01 != NULL) {
-    // }
-    // if (re->opn->re02 != NULL) {
-    // }
+    size_t n01, n02;
+
+    char *re01_str = re_to_str(re->opn->re01, &n01);
+    char *re02_str = re_to_str(re->opn->re02, &n02);
     char *op_str = re_opn_enum_to_str(re->opn->op);
     size_t op_str_len = strlen(op_str);
 
-    *n = op_str_len;
+    // +2 and to put re01 string in ()
+    *n = n01 + 2 + op_str_len;
+    if (n02 > 0) {
+      // +2 more to put re02 in ()
+      *n += n02 + 2;
+    }
+
     char *str = (char *) malloc(*n * sizeof(char));
-    strncpy(str, op_str, *n);
+    str[0] = '(';
+    strncpy(str + 1, re01_str, n01);
+    str[n01+1] = ')';
+    strncpy(str + n01 + 2, op_str, op_str_len);
+    if (n02 > 0) {
+      str[n01+2+op_str_len] = '(';
+      strncpy(str + n01 + 2 + op_str_len + 1, re02_str, n02);
+      str[*n-1] = ')';
+    }
+
+    free(re01_str);
+    free(re02_str);
+    // free(op_str); //this one was not malloced
+
     return str;
   }
 
 
 
-  return 0;
+  return NULL;
 }
