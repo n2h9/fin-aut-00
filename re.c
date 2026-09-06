@@ -145,6 +145,25 @@ struct stack_node *stack_push(struct stack_node *stack, struct node_item item) {
   return node;
 }
 
+/**
+ * returns string with 0 char in the end
+  */
+char* re_opn_enum_to_str(re_opn_enum op) {
+  switch (op) {
+    case RE_NOOP:
+      return "noop";
+    case RE_CONCAT:
+      return "";
+    case RE_ALTERN:
+      return "|";
+    case RE_CLOSUR:
+      return "*";
+  };
+  
+  // not possible
+  return "\0";
+} 
+
 char *re_to_str(re_t *re, size_t *n) {
   if (re->kind == RE_SEQ) {
     *n = re->seq->size;
@@ -152,6 +171,22 @@ char *re_to_str(re_t *re, size_t *n) {
     strncpy(str, re->seq->str, *n);
     return str;
   }
+
+  if (re->kind == RE_OPN) {
+    // if (re->opn->re01 != NULL) {
+    // }
+    // if (re->opn->re02 != NULL) {
+    // }
+    char *op_str = re_opn_enum_to_str(re->opn->op);
+    size_t op_str_len = strlen(op_str);
+
+    *n = op_str_len;
+    char *str = (char *) malloc(*n * sizeof(char));
+    strncpy(str, op_str, *n);
+    return str;
+  }
+
+
 
   return 0;
 }
