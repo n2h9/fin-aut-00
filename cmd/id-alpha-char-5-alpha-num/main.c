@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 // FA 
 // for a identifier of alphabetic haracter followed by up to 5 alphanumeric characters
@@ -41,13 +42,13 @@ const state s_error = 10;
 state transition(state s, char c) {
   state next = s_error;
   if (s == s_start) {
-    if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
       next = s1;
     } else {
       next = s_error;
     }
   } else if (s >= s1 && s <= s4) {
-    if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') {
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
       next = s + 1;
     } else {
       next = s_error;
@@ -66,7 +67,7 @@ const state init = s_start;
 const state accepted[] = {s2, s3, s4, s5}; 
 
 char is_accepted(state s) {
-  const static size_t len = sizeof(accepted) / sizeof(accepted[0]);
+  static const size_t len = sizeof(accepted) / sizeof(accepted[0]);
   for (size_t i = 0; i < len; i++) {
     if (accepted[i] == s) {
       return 1;

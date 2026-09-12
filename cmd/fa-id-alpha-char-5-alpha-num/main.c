@@ -1,7 +1,9 @@
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
 #include "../../fa.h"
 
 /* Start and error states defined in fa.h. */
@@ -65,26 +67,26 @@ void prepare_transition_table() {
   }
 
   for (symbol_t s = 'a'; s <= 'z'; s++) {
-    tt[s_start][s] = s1;
+    tt[s_start][(size_t)s] = s1;
   }
 
   for (symbol_t s = 'A'; s <= 'Z'; s++) {
-    tt[s_start][s] = s1;
+    tt[s_start][(size_t)s] = s1;
   }
 
   for (state_t st = s1; st <= s4; st++) {
     state_t next = st + 1;
 
     for (symbol_t s = 'a'; s <= 'z'; s++) {
-      tt[st][s] = next;
+      tt[st][(size_t)s] = next;
     }
 
     for (symbol_t s = 'A'; s <= 'Z'; s++) {
-      tt[st][s] = next;
+      tt[st][(size_t)s] = next;
     }
 
     for (symbol_t s = '0'; s <= '9'; s++) {
-      tt[st][s] = next;
+      tt[st][(size_t)s] = next;
     }
   }
 

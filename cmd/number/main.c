@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 char is_number(char * str, size_t len);
 
@@ -59,7 +60,7 @@ const state init = s0;
 const state accepted[] = {s1, s2}; 
 
 char is_accepted(state s) {
-  const static size_t len = sizeof(accepted) / sizeof(accepted[0]);
+  static const size_t len = sizeof(accepted) / sizeof(accepted[0]);
   for (size_t i = 0; i < len; i++) {
     if (accepted[i] == s) {
       return 1;

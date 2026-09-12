@@ -7,7 +7,7 @@
 
 state_t transition_func(fa_t *fa, state_t from, symbol_t s) {
   // TODO: Check that `from` is within the bounds of the transition table.
-  return fa->transition_table[from][s];
+  return fa->transition_table[from][(size_t)s];
 }
 
 /**

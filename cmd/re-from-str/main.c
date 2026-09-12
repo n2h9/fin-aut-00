@@ -10,7 +10,7 @@ void print_reg_01_altern();
 void print_reg_02_closure();
 void print_reg_03_nested();
 
-int main(int argc, char **argv) {
+int main() {
   // printf("re from str\n");
   // printf("enter string with re:\n");
   //
