@@ -20,15 +20,15 @@ struct RE_sequence;
 struct RE_operation;
 
 enum RE_type {
-  RE_SEQ,
-  RE_OPN,
+    RE_SEQ,
+    RE_OPN,
 };
 
 enum RE_operation_kind {
-  RE_NOOP,
-  RE_CONCAT,
-  RE_ALTERN,
-  RE_CLOSUR,
+    RE_NOOP,
+    RE_CONCAT,
+    RE_ALTERN,
+    RE_CLOSUR,
 };
 
 typedef char re_symbol_t;
@@ -41,22 +41,22 @@ typedef struct RE_operation re_opn_t;
 typedef enum RE_operation_kind re_opn_enum;
 
 struct RE_sequence {
-  re_symbol_t *str;
-  size_t size;
+    re_symbol_t* str;
+    size_t size;
 };
 
 struct RE_operation {
-  re_t *re01;
-  re_t *re02; /* Not used for unary operations. */
-  re_opn_enum op;
+    re_t* re01;
+    re_t* re02; /* Not used for unary operations. */
+    re_opn_enum op;
 };
 
 struct RE {
-  re_type_enum kind;
-  union {
-    re_seq_t *seq;
-    re_opn_t *opn;
-  };
+    re_type_enum kind;
+    union {
+        re_seq_t* seq;
+        re_opn_t* opn;
+    };
 };
 
 #define ERR_UNKNOWN_ESCAPE_SEQ 1
@@ -73,17 +73,17 @@ struct RE {
  * @return A pointer to the resulting regular expression, or NULL if parsing
  *         fails.
  */
-re_t *re_from_str(char *str, size_t len, int *err_code, int *err_indx);
+re_t* re_from_str(char* str, size_t len, int* err_code, int* err_indx);
 
-re_t *re_from_symbol(symbol_t s);
+re_t* re_from_symbol(symbol_t s);
 
-re_t *re_from_re(re_t *re1, re_t *re2, re_opn_enum opn_kind);
+re_t* re_from_re(re_t* re1, re_t* re2, re_opn_enum opn_kind);
 
 /**
-* Converts re to string
-* @param re
-* @oarams n       The length of the output string
-* @return         A pointer to the resulting string
-**/
-char *re_to_str(re_t *re, size_t *n);
+ * Converts re to string
+ * @param re
+ * @oarams n       The length of the output string
+ * @return         A pointer to the resulting string
+ **/
+char* re_to_str(re_t* re, size_t* n);
 #endif

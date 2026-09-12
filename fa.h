@@ -22,19 +22,19 @@ typedef char symbol_t;
 typedef state_t** transition_table_t;
 
 /* 256 is a 1 byte + 1  for  epsilon  symbol */
-#define INPUT_ALPHABET_SIZE (256 + 1) 
+#define INPUT_ALPHABET_SIZE (256 + 1)
 /* last index is used as n index for epsilon symbol */
 #define EPSILON_INDEX (INPUT_ALPHABET_SIZE - 1)
 
 struct FA {
-  state_t start_state;
-  size_t transition_table_size;
-  transition_table_t transition_table;
-  size_t accepting_states_len;
-  state_t accepting_states[];
+    state_t start_state;
+    size_t transition_table_size;
+    transition_table_t transition_table;
+    size_t accepting_states_len;
+    state_t accepting_states[];
 };
 
-state_t transition_func(fa_t *fa, state_t from, symbol_t s);
+state_t transition_func(fa_t* fa, state_t from, symbol_t s);
 
 /**
  * Determines whether the given input sequence is accepted by the finite
@@ -47,6 +47,6 @@ state_t transition_func(fa_t *fa, state_t from, symbol_t s);
  * @return 1 if the input sequence is accepted by the finite automaton,
  *         0 otherwise.
  */
-char satisfies_fa(fa_t *fa, symbol_t *input_seq, size_t len);
+char satisfies_fa(fa_t* fa, symbol_t* input_seq, size_t len);
 
 #endif // !_FA_H
